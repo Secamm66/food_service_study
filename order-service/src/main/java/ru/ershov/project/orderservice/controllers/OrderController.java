@@ -1,6 +1,6 @@
 package ru.ershov.project.orderservice.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.ershov.project.orderservice.dto.OrderPostResponse;
@@ -10,14 +10,10 @@ import ru.ershov.project.orderservice.dto.OrderGetResponse;
 import ru.ershov.project.orderservice.services.OrderService;
 
 @RestController
+@RequiredArgsConstructor
 public class OrderController {
 
-    private OrderService orderService;
-
-    @Autowired
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
+    private final OrderService orderService;
 
     @GetMapping("/orders")
     public ResponseEntity<OrderGetResponse> getAllOrders(@RequestParam(name = "page_index", defaultValue = "0") int pageIndex,
@@ -26,13 +22,13 @@ public class OrderController {
         return ResponseEntity.ok(orderGetResponse);
     }
 
-    @GetMapping("/orders/{id}")
-    public ResponseEntity<OrderResponseDTO> getAllOrders(@PathVariable("id") int id) {
+    @GetMapping("/order/{id}")
+    public ResponseEntity<OrderResponseDTO> getOrder(@PathVariable("id") int id) {
         return ResponseEntity.ok(orderService.getOrderById(id));
     }
 
     @PostMapping("/order")
-    public ResponseEntity<OrderPostResponse> getAllOrders(@RequestBody OrderRequestDTO orderRequestDTO) {
+    public ResponseEntity<OrderPostResponse> createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
         OrderPostResponse orderPostResponse = orderService.createOrder(orderRequestDTO);
         return ResponseEntity.ok(orderPostResponse);
     }

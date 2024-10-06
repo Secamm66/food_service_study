@@ -1,12 +1,10 @@
 package ru.ershov.project.orderservice.dto;
 
 import lombok.Data;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
+@Accessors(chain = true)
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class OrderPostResponse {
 
     private long id;

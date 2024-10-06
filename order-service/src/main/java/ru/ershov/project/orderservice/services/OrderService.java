@@ -1,6 +1,6 @@
 package ru.ershov.project.orderservice.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -21,27 +21,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final RestaurantMenuItemRepository restaurantMenuItemRepository;
-    public final RestaurantRepository restaurantRepository;
+    private final RestaurantRepository restaurantRepository;
     private final OrderResponseDTOMapper orderResponseDTOMapper;
     private final OrderRequestDTOMapper orderRequestDTOMapper;
-
-    @Autowired
-    public OrderService(OrderRepository orderRepository,
-                        RestaurantMenuItemRepository restaurantMenuItemRepository,
-                        RestaurantRepository restaurantRepository,
-                        OrderResponseDTOMapper orderResponseDTOMapper,
-                        OrderRequestDTOMapper orderRequestDTOMapper) {
-        this.orderRepository = orderRepository;
-        this.restaurantMenuItemRepository = restaurantMenuItemRepository;
-        this.restaurantRepository = restaurantRepository;
-        this.orderResponseDTOMapper = orderResponseDTOMapper;
-        this.orderRequestDTOMapper = orderRequestDTOMapper;
-    }
 
     public OrderGetResponse getAllOrdersToSend(int pageIndex, int pageCount) {
         OrderGetResponse orderGetResponse = new OrderGetResponse();
@@ -49,10 +37,9 @@ public class OrderService {
             throw new InvalidPageParameterException("Invalid page parameters");
         }
         List<OrderResponseDTO> orderResponseDTOList = getAllOrders(PageRequest.of(pageIndex, pageCount)).stream()
-                .map(orderResponseDTOMapper::toDTO).collect(Collectors.toList());
-        orderGetResponse.setOrders(orderResponseDTOList);
-        orderGetResponse.setPageIndex(pageIndex);
-        orderGetResponse.setPageCount(pageCount);
+                .map(orderResponseDTOMapper::toDTO)
+                .collect(Collectors.toList());
+        orderGetResponse.setOrders(orderResponseDTOList).setPageIndex(pageIndex).setPageCount(pageCount);
         return orderGetResponse;
     }
 
@@ -67,16 +54,14 @@ public class OrderService {
 
     @Transactional
     public OrderPostResponse createOrder(OrderRequestDTO dto) {
-
         Restaurant restaurant = getRestaurantAndCheckMenuItemsById(dto);
-
         Order order = orderRequestDTOMapper.toEntity(dto);
-
         enrichOrder(order, restaurant);
-
         orderRepository.save(order);
+        OrderPostResponse orderPostResponse = new OrderPostResponse();
+        orderPostResponse.setId(order.getId()).setSecretPaymentUrl("Ссылка для оплаты").setEstimatedTimeOfArrival("5 минут");
 
-        return new OrderPostResponse(order.getId(), "Ссылка для оплаты", "5 минут");
+        return orderPostResponse;
     }
 
     private Restaurant getRestaurantAndCheckMenuItemsById(OrderRequestDTO dto) {
@@ -95,9 +80,7 @@ public class OrderService {
     private void enrichOrder(Order order, Restaurant restaurant) {
         Customer customer = new Customer();
         customer.setId(1); // ???Назначаю пока вручную
-        order.setCustomer(customer);
-        order.setStatus(OrderStatus.ACCEPTED);
-        order.setOrderDate(LocalDateTime.now());
+        order.setCustomer(customer).setStatus(OrderStatus.ACCEPTED).setOrderDate(LocalDateTime.now());
 
         for (OrderItem orderItem : order.getOrderItems()) {
             orderItem.setOrder(order);

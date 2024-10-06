@@ -1,13 +1,11 @@
 package ru.ershov.project.orderservice.models;
 
 import lombok.Data;
-import lombok.ToString;
 import ru.ershov.project.orderservice.models.statuses.RestaurantStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "restaurant")
@@ -31,11 +29,10 @@ public class Restaurant {
     @Column(name = "coordinates")
     private String coordinates;
 
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Order> orders;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "restaurant")
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<RestaurantMenuItem> restaurantMenuItems;
 
 }

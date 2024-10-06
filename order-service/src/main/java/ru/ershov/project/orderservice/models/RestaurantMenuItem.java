@@ -1,7 +1,6 @@
 package ru.ershov.project.orderservice.models;
 
 import lombok.Data;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -29,12 +28,10 @@ public class RestaurantMenuItem {
     @Column(name = "description")
     private String description;
 
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
     private Restaurant restaurant;
 
-    @ToString.Exclude
-    @OneToMany(mappedBy = "restaurantMenuItem")
+    @OneToMany(mappedBy = "restaurantMenuItem", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 }

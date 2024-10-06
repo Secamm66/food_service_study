@@ -21,12 +21,11 @@ public class OrderItem {
     @Column(name = "quantity")
     private int quantity;
 
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_menu_item_id", referencedColumnName = "id")
     private RestaurantMenuItem restaurantMenuItem;
 

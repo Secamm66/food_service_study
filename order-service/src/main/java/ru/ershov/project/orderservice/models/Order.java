@@ -2,7 +2,7 @@ package ru.ershov.project.orderservice.models;
 
 import lombok.Data;
 
-import org.hibernate.annotations.Cascade;
+import lombok.experimental.Accessors;
 import ru.ershov.project.orderservice.models.statuses.OrderStatus;
 
 import javax.persistence.*;
@@ -12,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@Accessors(chain = true)
 @Data
 public class Order {
 
@@ -26,15 +27,15 @@ public class Order {
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "courier_id", referencedColumnName = "id")
     private Courier courier;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
     private Restaurant restaurant;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 

@@ -1,11 +1,10 @@
 package ru.ershov.project.orderservice.models;
 
 import lombok.Data;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "customer")
@@ -27,6 +26,6 @@ public class Customer implements Serializable {
     private String email;
 
     @OneToMany(mappedBy = "customer")
-    private Set<Order> orders;
+    private List<Order> orders;
 
 }
