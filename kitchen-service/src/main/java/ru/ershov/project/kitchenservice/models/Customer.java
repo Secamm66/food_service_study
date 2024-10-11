@@ -1,22 +1,21 @@
-package ru.ershov.project.deliveryservice.models;
+package ru.ershov.project.kitchenservice.models;
 
 import lombok.Data;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "customer")
 @Data
-public class Customer implements Serializable {
+public class Customer {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(name = "fullname")
+    @Column(name = "full_name")
     private String fullName;
 
     @Column(name = "phone")
@@ -25,7 +24,7 @@ public class Customer implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "customer")
-    private Set<Order> orders;
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Order> orders;
 
 }

@@ -4,22 +4,18 @@ public enum OrderStatus {
 
     ACCEPTED, // Заказ принят
 
-    PREPARING, // Готовится
+    PAID, // Оплачен
 
-    READY, // Готово
+    ACTIVE, // Подтвержден, готовится
 
-    ON_THE_WAY,// В пути
+    DENIED, // Отменён
 
-    DELIVERED, // Доставлено
+    COMPLETE, // Готов
 
-    CANCELLED, // Отменено
+    AWAITING_ASSEMBLY, // Ожидает сборки
 
-    AWAITING_PAYMENT, // Ожидает оплаты
+    ON_THE_WAY, // В пути
 
-    PAID, // Оплачено
-
-    AWAITING_CONFIRMATION, // Ожидает подтверждения
-
-    AWAITING_ASSEMBLY // Ожидает сборки
+    DELIVERED // Доставлен
 
 }

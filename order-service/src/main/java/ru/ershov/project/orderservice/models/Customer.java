@@ -3,18 +3,17 @@ package ru.ershov.project.orderservice.models;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "customer")
 @Data
-public class Customer implements Serializable {
+public class Customer {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "full_name")
     private String fullName;
@@ -25,7 +24,7 @@ public class Customer implements Serializable {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Order> orders;
 
 }

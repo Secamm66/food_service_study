@@ -1,35 +1,37 @@
-package ru.ershov.project.deliveryservice.models;
+package ru.ershov.project.kitchenservice.models;
 
 import lombok.Data;
-import ru.ershov.project.deliveryservice.models.statuses.RestaurantStatus;
+import ru.ershov.project.kitchenservice.models.statuses.RestaurantStatus;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "restaurant")
 @Data
-public class Restaurant implements Serializable {
+public class Restaurant {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "address")
     private String address;
 
-    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private RestaurantStatus status;
 
     @Column(name = "coordinates")
     private String coordinates;
 
-    @OneToMany(mappedBy = "restaurant")
-    private Set<Order> orders;
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private List<Order> orders;
 
-    @OneToMany(mappedBy = "restaurant")
-    private Set<RestaurantMenuItem> restaurantMenuItems;
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private List<RestaurantMenuItem> restaurantMenuItems;
 
 }

@@ -4,7 +4,6 @@ import lombok.Data;
 import ru.ershov.project.orderservice.models.statuses.RestaurantStatus;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -15,7 +14,7 @@ public class Restaurant {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "name")
     private String name;

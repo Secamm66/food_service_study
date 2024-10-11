@@ -4,32 +4,31 @@ import lombok.Data;
 import ru.ershov.project.deliveryservice.models.statuses.CourierStatus;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "courier")
 @Data
-public class Courier implements Serializable {
+public class Courier {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(name = "fullname")
+    @Column(name = "full_name")
     private String fullName;
 
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private CourierStatus status;
 
     @Column(name = "coordinates")
     private String coordinates;
 
-    @OneToMany(mappedBy = "courier")
-    private Set<Order> orders;
+    @OneToMany(mappedBy = "courier", cascade = CascadeType.ALL)
+    private List<Order> orders;
 
 }

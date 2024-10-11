@@ -1,14 +1,15 @@
-package ru.ershov.project.orderservice.dto;
+package ru.ershov.project.kitchenservice.dto.restaurantMenuItem;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.util.List;
+
 @Data
 @Accessors(chain = true)
-public class OrderGetResponse {
+public class MenuItemListGetResponse {
 
-    private List<OrderResponseDTO> orders;
+    private List<MenuItemDTO> orders;
     private int pageIndex;
     private int pageCount;
 

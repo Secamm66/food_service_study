@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class OrderResponseDTO {
+public class OrderDTOGetResponse {
 
-    private long id;
+    private Long id;
 
     private RestaurantResponseDTO restaurant;
 

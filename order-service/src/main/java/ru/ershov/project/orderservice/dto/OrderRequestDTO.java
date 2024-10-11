@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class OrderRequestDTO {
 
-    private long restaurantId;
+    private Long restaurantId;
     private List<MenuItemsRequestDTO> menuItems;
 
 }

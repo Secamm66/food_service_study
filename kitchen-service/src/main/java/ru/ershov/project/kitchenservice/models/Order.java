@@ -1,43 +1,44 @@
-package ru.ershov.project.deliveryservice.models;
+package ru.ershov.project.kitchenservice.models;
 
 import lombok.Data;
-import ru.ershov.project.deliveryservice.models.statuses.OrderStatus;
+
+import lombok.experimental.Accessors;
+import ru.ershov.project.kitchenservice.models.statuses.OrderStatus;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "orders")
+@Accessors(chain = true)
 @Data
-public class Order implements Serializable {
+public class Order {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @Temporal(value = TemporalType.TIMESTAMP)
     @Column(name = "order_date")
     private LocalDateTime orderDate;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "courier_id", referencedColumnName = "id")
     private Courier courier;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "restourant_id", referencedColumnName = "id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
     private Restaurant restaurant;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
-    @OneToMany(mappedBy = "orders")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 
 }

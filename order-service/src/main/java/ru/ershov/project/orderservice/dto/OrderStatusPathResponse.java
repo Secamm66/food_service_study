@@ -5,10 +5,9 @@ import lombok.experimental.Accessors;
 
 @Accessors(chain = true)
 @Data
-public class OrderPostResponse {
+public class OrderStatusPathResponse {
 
-    private long id;
-    private String secretPaymentUrl;
-    private String estimatedTimeOfArrival;
+    private Long orderId;
+    private String orderStatus;
 
 }

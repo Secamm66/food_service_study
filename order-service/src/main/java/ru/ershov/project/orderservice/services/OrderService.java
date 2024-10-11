@@ -10,11 +10,13 @@ import ru.ershov.project.orderservice.mapper.OrderRequestDTOMapper;
 import ru.ershov.project.orderservice.mapper.OrderResponseDTOMapper;
 import ru.ershov.project.orderservice.models.*;
 import ru.ershov.project.orderservice.models.statuses.OrderStatus;
+import ru.ershov.project.orderservice.models.statuses.RestaurantStatus;
 import ru.ershov.project.orderservice.repositories.OrderRepository;
 import ru.ershov.project.orderservice.repositories.RestaurantMenuItemRepository;
 import ru.ershov.project.orderservice.repositories.RestaurantRepository;
 import ru.ershov.project.orderservice.util.EntityNotFoundException;
 import ru.ershov.project.orderservice.util.InvalidPageParameterException;
+import ru.ershov.project.orderservice.util.RestaurantIsNotOpenException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,47 +32,64 @@ public class OrderService {
     private final RestaurantRepository restaurantRepository;
     private final OrderResponseDTOMapper orderResponseDTOMapper;
     private final OrderRequestDTOMapper orderRequestDTOMapper;
+    private final Long customerId = 1L; // TODO: Будет назначаться из сессии
 
-    public OrderGetResponse getAllOrdersToSend(int pageIndex, int pageCount) {
-        OrderGetResponse orderGetResponse = new OrderGetResponse();
-        if (pageIndex < 0 || pageCount < 1) {
-            throw new InvalidPageParameterException("Invalid page parameters");
-        }
-        List<OrderResponseDTO> orderResponseDTOList = getAllOrders(PageRequest.of(pageIndex, pageCount)).stream()
+
+    public OrderListGetResponse getAllOrdersToSend(int pageIndex, int pageCount) {
+        checkPaginationParameters(pageIndex, pageCount);
+        List<OrderDTOGetResponse> orderDTOGetResponseList = getOrdersByCustomerId(customerId, PageRequest.of(pageIndex, pageCount)).stream()
                 .map(orderResponseDTOMapper::toDTO)
                 .collect(Collectors.toList());
-        orderGetResponse.setOrders(orderResponseDTOList).setPageIndex(pageIndex).setPageCount(pageCount);
-        return orderGetResponse;
+        OrderListGetResponse orderListGetResponse = new OrderListGetResponse();
+        orderListGetResponse.setOrders(orderDTOGetResponseList).setPageIndex(pageIndex).setPageCount(pageCount);
+        return orderListGetResponse;
     }
 
-    public OrderResponseDTO getOrderById(long id) {
-        return orderResponseDTOMapper.toDTO(orderRepository.findById(id)
+    public OrderDTOGetResponse getOrderById(Long id) {
+        return orderResponseDTOMapper.toDTO(orderRepository.findByIdAndCustomerId(id, customerId)
                 .orElseThrow(() -> new EntityNotFoundException("Order with id=" + id + " not found")));
     }
 
-    private List<Order> getAllOrders(Pageable pageable) {
-        return orderRepository.findAll();
+    private List<Order> getOrdersByCustomerId(Long customerId, Pageable pageable) {
+        return orderRepository.findByCustomerId(customerId);
+    }
+
+    private void checkPaginationParameters(int pageIndex, int pageCount) {
+        if (pageIndex < 0 || pageCount < 1) {
+            throw new InvalidPageParameterException("Invalid page parameters");
+        }
     }
 
     @Transactional
-    public OrderPostResponse createOrder(OrderRequestDTO dto) {
+    public OrderCreatePostResponse createOrder(OrderRequestDTO dto) {
         Restaurant restaurant = getRestaurantAndCheckMenuItemsById(dto);
         Order order = orderRequestDTOMapper.toEntity(dto);
         enrichOrder(order, restaurant);
         orderRepository.save(order);
-        OrderPostResponse orderPostResponse = new OrderPostResponse();
-        orderPostResponse.setId(order.getId()).setSecretPaymentUrl("Ссылка для оплаты").setEstimatedTimeOfArrival("5 минут");
+        OrderCreatePostResponse orderCreatePostResponse = new OrderCreatePostResponse();
+        orderCreatePostResponse.setId(order.getId()).setSecretPaymentUrl("Ссылка для оплаты").setEstimatedTimeOfArrival("5 минут");
 
-        return orderPostResponse;
+        return orderCreatePostResponse;
+    }
+
+    @Transactional
+    public OrderStatusPathResponse updateOrderStatus(Long id) {
+        Order orderToUpdate = getOrderToUpdate(id);
+        orderToUpdate.setStatus(OrderStatus.PAID);
+        OrderStatusPathResponse orderStatusPathResponse = new OrderStatusPathResponse();
+        return orderStatusPathResponse.setOrderId(id).setOrderStatus("PAID");
     }
 
     private Restaurant getRestaurantAndCheckMenuItemsById(OrderRequestDTO dto) {
         Restaurant restaurant = getRestaurantById(dto.getRestaurantId());
 
+        if (restaurant.getStatus() == RestaurantStatus.CLOSED) {
+            throw new RestaurantIsNotOpenException("Restaurant " + restaurant.getName() + " is closed now");
+        }
         for (MenuItemsRequestDTO menuItem : dto.getMenuItems()) {
             RestaurantMenuItem restaurantMenuItem = getRestaurantMenuItemById(menuItem.getMenuItemId());
 
-            if (restaurantMenuItem.getRestaurant().getId() != restaurant.getId()) {
+            if (!restaurantMenuItem.getRestaurant().getId().equals(restaurant.getId())) {
                 throw new IllegalArgumentException("Menu item does not belong to the selected restaurant");
             }
         }
@@ -79,25 +98,30 @@ public class OrderService {
 
     private void enrichOrder(Order order, Restaurant restaurant) {
         Customer customer = new Customer();
-        customer.setId(1); // ???Назначаю пока вручную
+        customer.setId(customerId);
         order.setCustomer(customer).setStatus(OrderStatus.ACCEPTED).setOrderDate(LocalDateTime.now());
 
         for (OrderItem orderItem : order.getOrderItems()) {
             orderItem.setOrder(order);
             restaurant.getRestaurantMenuItems().stream()
-                    .filter(menuItem -> menuItem.getId() == (orderItem.getRestaurantMenuItem().getId()))
+                    .filter(menuItem -> menuItem.getId().equals(orderItem.getRestaurantMenuItem().getId()))
                     .findFirst()
                     .ifPresent(menuItem -> orderItem.setPrice(menuItem.getPrice() * orderItem.getQuantity()));
         }
     }
 
-    private Restaurant getRestaurantById(long id) {
+    private Restaurant getRestaurantById(Long id) {
         return restaurantRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Restaurant with id=" + id + " not found"));
     }
 
-    private RestaurantMenuItem getRestaurantMenuItemById(long id) {
+    private RestaurantMenuItem getRestaurantMenuItemById(Long id) {
         return restaurantMenuItemRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Restaurant with id=" + id + " not found"));
     }
+
+    private Order getOrderToUpdate(Long id) {
+        return orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Order with id=" + id + " not found"));
+    }
+
 }

@@ -6,6 +6,6 @@ import lombok.Data;
 public class MenuItemsRequestDTO {
 
     private int quantity;
-    private long menuItemId;
+    private Long menuItemId;
 
 }

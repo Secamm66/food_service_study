@@ -1,25 +1,19 @@
-package ru.ershov.project.deliveryservice.models.statuses;
+package ru.ershov.project.kitchenservice.models.statuses;
 
 public enum OrderStatus {
 
     ACCEPTED, // Заказ принят
 
-    PREPARING, // Готовится
+    PAID, // Оплачен
 
-    READY, // Готово
+    ACTIVE, // Подтвержден, готовится
 
-    ON_THE_WAY,// В пути
+    DENIED, // Отменён
 
-    DELIVERED, // Доставлено
+    COMPLETE, // Готов
 
-    CANCELLED, // Отменено
+    ACCEPTED_FOR_DELIVERY, // Принят в доставку
 
-    AWAITING_PAYMENT, // Ожидает оплаты
-
-    PAID, // Оплачено
-
-    AWAITING_CONFIRMATION, // Ожидает подтверждения
-
-    AWAITING_ASSEMBLY // Ожидает сборки
+    DELIVERED // Доставлен
 
 }

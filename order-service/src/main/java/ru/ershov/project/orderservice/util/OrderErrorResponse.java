@@ -2,9 +2,11 @@ package ru.ershov.project.orderservice.util;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
+@Accessors(chain = true)
 @Data
 public class OrderErrorResponse {
     private int status;
@@ -14,10 +16,4 @@ public class OrderErrorResponse {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime timestamp;
 
-    public OrderErrorResponse(int status, String error, String message, LocalDateTime timestamp) {
-        this.status = status;
-        this.error = error;
-        this.message = message;
-        this.timestamp = timestamp;
-    }
 }

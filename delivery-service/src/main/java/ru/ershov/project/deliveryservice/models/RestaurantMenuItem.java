@@ -1,26 +1,27 @@
 package ru.ershov.project.deliveryservice.models;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "restaurant_menu_item")
 @Data
-public class RestaurantMenuItem implements Serializable {
+@Accessors(chain = true)
+public class RestaurantMenuItem {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "name")
     private String name;
 
     @Column(name = "price")
-    private int price;
+    private Integer price;
 
     @Column(name = "image")
     private String imagePath;
@@ -28,10 +29,10 @@ public class RestaurantMenuItem implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "restaurant_id", referencedColumnName = "id")
     private Restaurant restaurant;
 
-    @OneToMany(mappedBy = "restaurant_menu_item")
+    @OneToMany(mappedBy = "restaurantMenuItem", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 }

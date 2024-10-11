@@ -6,7 +6,6 @@ import lombok.experimental.Accessors;
 import ru.ershov.project.orderservice.models.statuses.OrderStatus;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class Order {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
