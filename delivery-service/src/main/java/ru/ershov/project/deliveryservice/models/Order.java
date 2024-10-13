@@ -2,6 +2,7 @@ package ru.ershov.project.deliveryservice.models;
 
 import lombok.Data;
 
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import ru.ershov.project.deliveryservice.models.statuses.OrderStatus;
 
@@ -38,6 +39,7 @@ public class Order {
     @JoinColumn(name = "customer_id", referencedColumnName = "id")
     private Customer customer;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems;
 

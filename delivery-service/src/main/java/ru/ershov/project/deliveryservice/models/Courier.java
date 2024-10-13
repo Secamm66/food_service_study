@@ -1,6 +1,7 @@
 package ru.ershov.project.deliveryservice.models;
 
 import lombok.Data;
+import lombok.ToString;
 import ru.ershov.project.deliveryservice.models.statuses.CourierStatus;
 
 import javax.persistence.*;
@@ -28,6 +29,7 @@ public class Courier {
     @Column(name = "coordinates")
     private String coordinates;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "courier", cascade = CascadeType.ALL)
     private List<Order> orders;
 

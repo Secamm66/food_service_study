@@ -1,6 +1,7 @@
 package ru.ershov.project.deliveryservice.models;
 
 import lombok.Data;
+import lombok.ToString;
 import ru.ershov.project.deliveryservice.models.statuses.RestaurantStatus;
 
 import javax.persistence.*;
@@ -28,9 +29,11 @@ public class Restaurant {
     @Column(name = "coordinates")
     private String coordinates;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Order> orders;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<RestaurantMenuItem> restaurantMenuItems;
 

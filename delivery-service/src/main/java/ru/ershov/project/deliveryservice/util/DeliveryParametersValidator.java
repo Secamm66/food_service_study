@@ -6,7 +6,7 @@ import ru.ershov.project.deliveryservice.models.statuses.OrderStatus;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderParametersValidator {
+public class DeliveryParametersValidator {
 
     public static void checkPaginationParameters(int pageIndex, int pageCount) {
         if (pageIndex < 0 || pageCount < 1) {
@@ -14,21 +14,16 @@ public class OrderParametersValidator {
         }
     }
 
-    public static List<OrderStatus> checkAndConvertOrderStatusParametersForFiltration(List<String> orderStatuses) {
+    public static List<OrderStatus> checkAndConvertDeliveryStatusParametersForFiltration(List<String> statuses) {
         List<OrderStatus> orderStatusesList = new ArrayList<>();
-        for (String orderStatus : orderStatuses) {
-            if (orderStatus.equalsIgnoreCase("active")) {
-                orderStatusesList.add(OrderStatus.ACTIVE);
-            }
-            if (orderStatus.equalsIgnoreCase("complete")) {
+        for (String deliveryStatus : statuses) {
+            if (deliveryStatus.equalsIgnoreCase("active")) {
                 orderStatusesList.add(OrderStatus.COMPLETE);
-                orderStatusesList.add(OrderStatus.ACCEPTED_FOR_DELIVERY);
+            }
+            if (deliveryStatus.equalsIgnoreCase("complete")) {
                 orderStatusesList.add(OrderStatus.DELIVERED);
             }
-            if (orderStatus.equalsIgnoreCase("denied")) {
-                orderStatusesList.add(OrderStatus.DENIED);
-            }
-            if (!orderStatus.equalsIgnoreCase("active") && !orderStatus.equalsIgnoreCase("complete") && !orderStatus.equalsIgnoreCase("denied")) {
+            if (!deliveryStatus.equalsIgnoreCase("active") && !deliveryStatus.equalsIgnoreCase("complete")) {
                 throw new InvalidPageParameterException("Invalid status parameters");
             }
         }
