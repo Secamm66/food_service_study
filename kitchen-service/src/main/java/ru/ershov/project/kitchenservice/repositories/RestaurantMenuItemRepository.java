@@ -1,5 +1,6 @@
 package ru.ershov.project.kitchenservice.repositories;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -15,7 +16,7 @@ import java.util.Optional;
 @Repository
 public interface RestaurantMenuItemRepository extends JpaRepository<RestaurantMenuItem, Long> {
 
-    List<RestaurantMenuItem> findAllByRestaurantId(Long restaurantId);
+    List<RestaurantMenuItem> findAllByRestaurantId(Long restaurantId, Pageable pageable);
 
     Optional<RestaurantMenuItem> findByIdAndRestaurantId(Long itemId, Long restaurantId);
 

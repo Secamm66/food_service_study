@@ -10,6 +10,6 @@ public class DeliveryResponseDTO {
     private Long orderId;
     private RestaurantDTO restaurant;
     private CustomerDTO customer;
-    //private Integer payment;
+    private Integer payment;
 
 }

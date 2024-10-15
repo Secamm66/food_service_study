@@ -51,7 +51,7 @@ public class OrderService {
     }
 
     private List<Order> getOrdersByCustomerId(Long customerId, Pageable pageable) {
-        return orderRepository.findByCustomerId(customerId);
+        return orderRepository.findByCustomerId(customerId, pageable);
     }
 
     private void checkPaginationParameters(int pageIndex, int pageCount) {
@@ -112,16 +112,19 @@ public class OrderService {
 
     private Restaurant getRestaurantById(Long id) {
         return restaurantRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Restaurant with id=" + id + " not found"));
+                .orElseThrow(()
+                        -> new EntityNotFoundException("Restaurant with id=" + id + " not found"));
     }
 
     private RestaurantMenuItem getRestaurantMenuItemById(Long id) {
         return restaurantMenuItemRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Restaurant with id=" + id + " not found"));
+                .orElseThrow(()
+                        -> new EntityNotFoundException("Restaurant with id=" + id + " not found"));
     }
 
     private Order getOrderToUpdate(Long id) {
-        return orderRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Order with id=" + id + " not found"));
+        return orderRepository.findById(id).orElseThrow(()
+                -> new EntityNotFoundException("Order with id=" + id + " not found"));
     }
 
 }

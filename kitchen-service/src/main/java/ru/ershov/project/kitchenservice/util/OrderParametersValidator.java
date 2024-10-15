@@ -51,8 +51,9 @@ public class OrderParametersValidator {
                 throw new InvalidPageParameterException("Order with status ACTIVE cannot be set to DENIED");
             }
         }
-        if (currentStatus == OrderStatus.DENIED || currentStatus == OrderStatus.COMPLETE) {
-            throw new InvalidPageParameterException("Order status cannot be changed from DENIED or COMPLETE");
+        if (currentStatus == OrderStatus.ACCEPTED || currentStatus == OrderStatus.DENIED || currentStatus == OrderStatus.COMPLETE
+                || currentStatus == OrderStatus.ACCEPTED_FOR_DELIVERY || currentStatus == OrderStatus.DELIVERED) {
+            throw new InvalidPageParameterException("Order status cannot be changed from DENIED, COMPLETE, ACCEPTED_FOR_DELIVERY and DELIVERED");
         }
     }
 

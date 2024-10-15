@@ -1,13 +1,10 @@
 package ru.ershov.project.deliveryservice.util;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class DistanceCalculator {
 
     private static final double EARTH_RADIUS = 6371.0;
-    //@Named("calculateDistance")
-    public Double calculateDistance(String startCoordinates, String endCoordinates) {
+
+    public static Double calculateDistance(String startCoordinates, String endCoordinates) {
 
         double startLat = Double.parseDouble(startCoordinates.split(",")[0]);
         double startLon = Double.parseDouble(startCoordinates.split(",")[1]);

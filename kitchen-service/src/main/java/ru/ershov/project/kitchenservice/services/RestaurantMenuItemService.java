@@ -86,7 +86,7 @@ public class RestaurantMenuItemService {
     }
 
     private List<RestaurantMenuItem> getMenuItemsByRestaurantId(Long restaurantId, Pageable pageable) {
-        return restaurantMenuItemRepository.findAllByRestaurantId(restaurantId);
+        return restaurantMenuItemRepository.findAllByRestaurantId(restaurantId, pageable);
     }
 
     private RestaurantMenuItem getRestaurantMenuItemById(Long id, Long restaurantId) {

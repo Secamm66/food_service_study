@@ -2,6 +2,7 @@ package ru.ershov.project.deliveryservice.models;
 
 import lombok.Data;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 import ru.ershov.project.deliveryservice.models.statuses.CourierStatus;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "courier")
 @Data
+@Accessors(chain = true)
 public class Courier {
 
     @Id

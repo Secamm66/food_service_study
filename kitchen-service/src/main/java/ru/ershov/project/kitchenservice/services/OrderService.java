@@ -52,7 +52,7 @@ public class OrderService {
 
 
     private List<Order> getOrdersByRestaurantId(Long restaurantId, List<OrderStatus> orderStatuses, Pageable pageable) {
-        return orderRepository.findAllByRestaurantIdAndStatusIn(restaurantId, orderStatuses);
+        return orderRepository.findAllByRestaurantIdAndStatusIn(restaurantId, orderStatuses, pageable);
     }
 
     private Order getOrderById(Long orderId) {
